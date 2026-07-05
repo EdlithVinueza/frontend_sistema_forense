@@ -4,15 +4,9 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: '/dashboard'
+    redirect: '/certification'
   },
 
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: () => import('../views/dashboard/DashboardView.vue'),
-    meta: { requiresAuth: true }
-  },
 
   {
     path: '/certification',

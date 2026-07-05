@@ -1,7 +1,6 @@
 <template>
   <div class="card-main p-4 md:p-6 bg-white max-w-4xl mx-auto animate-fade-in">
     <div class="text-center mb-3 relative">
-      <div v-if="successMsg" class="absolute -top-10 left-1/2 -translate-x-1/2 w-full p-2 bg-green-100 text-green-800 text-center font-bold text-xs rounded-lg shadow-sm z-10 animate-fade-in">{{ successMsg }}</div>
       <h2 class="text-2xl font-heading font-bold">Carga de Archivos Forenses</h2>
       <p class="text-gray-500 text-xs mt-1">Se requieren ambos archivos para completar el análisis de integridad.</p>
     </div>
@@ -46,30 +45,20 @@
         </div>
       </div>
       
-      <ValidationError v-if="error" :error="error" class="top-1/2 -translate-y-1/2" />
     </div>
 
     <!-- Requisitos -->
-    <div class="bg-surface p-3 rounded-xl border border-outline-variant/30 flex gap-4 mb-3">
-      <span class="material-symbols-outlined text-secondary text-sm mt-0.5">info</span>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-1 w-full">
-        <div class="flex items-center gap-2 text-[10px] font-medium text-gray-600">
-          <span class="material-symbols-outlined text-[12px] text-secondary">check_circle</span> Formatos: PSD + Imagen
-        </div>
-        <div class="flex items-center gap-2 text-[10px] font-medium text-gray-600">
-          <span class="material-symbols-outlined text-[12px] text-secondary">check_circle</span> Sin marcas de agua
-        </div>
+   
+      <div class="alert-warning mt-2">
+        <span class="material-symbols-outlined text-[14px]">warning</span>
+        <p><strong>Importante:</strong> La obra maestra (PSD) y la imagen deben tener obligatoriamente un <strong>fondo sólido</strong>. </p>
       </div>
-    </div>
-
-    <div class="flex justify-between border-t border-gray-100 pt-4">
-      <button @click="$emit('cancel')" class="btn-ghost !px-6 !py-2 uppercase tracking-[0.2em] text-[10px]">
-        <span class="material-symbols-outlined text-sm align-middle">arrow_back</span> Volver a la Bóveda
-      </button>
+    
+    <div class="flex justify-end border-t border-gray-100 pt-4">
       <button 
         @click="validateAndNext" 
         :disabled="!context.archivos.psd || !context.archivos.imagen || isProcessing"
-        :class="['btn-black !px-8 !py-2 uppercase tracking-[0.2em] text-[10px] transition-all', (!context.archivos.psd || !context.archivos.imagen || isProcessing) ? 'opacity-50 cursor-not-allowed' : '']"
+        class="btn-black !px-8 !py-2 uppercase tracking-[0.2em] text-[10px] w-full md:w-auto"
       >
         <span v-if="!isProcessing">Siguiente Paso <span class="material-symbols-outlined text-sm align-middle">arrow_forward</span></span>
         <span v-else class="flex items-center justify-center gap-2"><span class="material-symbols-outlined animate-spin text-sm">autorenew</span> Procesando...</span>
@@ -79,14 +68,68 @@
     <!-- Loading Overlay -->
     <div v-if="isProcessing" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center rounded-xl">
       <span class="material-symbols-outlined text-4xl text-primary animate-spin mb-2">autorenew</span>
-      <p class="text-xs font-bold text-gray-700 uppercase tracking-widest text-center px-4">Analizando Archivos...<br/><span class="text-[9px] text-gray-500 font-normal normal-case">Evaluando integridad y extrayendo metadatos</span></p>
+      <p class="text-xs font-bold text-gray-700 uppercase tracking-widest text-center px-4">
+        {{ isRecovering ? 'Recuperando Certificado...' : 'Analizando Archivos...' }}<br/>
+        <span class="text-[9px] text-gray-500 font-normal normal-case">
+          {{ isRecovering ? 'Ensamblando PDF e inyectando metadatos' : 'Evaluando integridad y extrayendo metadatos' }}
+        </span>
+      </p>
     </div>
+
+    <!-- Recovery Modal -->
+    <div v-if="showRecoveryModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div class="bg-white p-6 rounded-xl max-w-md w-full shadow-2xl animate-fade-in text-center relative">
+        <span class="material-symbols-outlined text-4xl mb-2" :class="isSystemLocked ? 'text-red-500' : 'text-primary'">
+          {{ isSystemLocked ? 'gpp_bad' : 'policy' }}
+        </span>
+        <h3 class="text-lg font-bold mb-2" :class="isSystemLocked ? 'text-red-600' : ''">
+          {{ isSystemLocked ? 'SISTEMA BLOQUEADO' : 'Obra Ya Registrada' }}
+        </h3>
+        
+        <div v-if="!isSystemLocked">
+          <p class="text-xs text-gray-600 mb-4">Esta obra ha sido certificada anteriormente, ingresa tu número de cédula para emitir nuevamente el certificado registrado anteriormente.</p>
+          
+          <input type="text" v-model="recoveryCedula" placeholder="Número de Cédula" class="w-full p-2 text-sm border rounded-lg mb-2 text-center focus:ring-2 focus:ring-primary outline-none">
+          
+          <p v-if="recoveryAttempts > 0" class="text-xs text-red-500 font-bold mb-3">
+            Cédula incorrecta. Intento {{ recoveryAttempts }} de 3. Vuelva a intentar.
+          </p>
+          
+          <div class="flex gap-2 justify-center mt-4">
+            <button @click="cancelRecovery" class="btn-ghost !py-2 !px-4 text-xs uppercase">Cancelar</button>
+            <button @click="attemptRecovery" :disabled="!recoveryCedula" class="btn-black !py-2 !px-4 text-xs uppercase">Verificar Identidad</button>
+          </div>
+        </div>
+        
+        <div v-else>
+          <p class="text-xs text-red-600 font-bold mb-4 bg-red-50 p-3 rounded-lg border border-red-200">
+            Se han detectado indicios de robo de autoría debido a múltiples intentos fallidos con cédulas incorrectas. El sistema ha bloqueado temporalmente este proceso por razones de seguridad forense.
+          </p>
+          <button @click="cancelRecovery" class="btn-ghost !py-2 !px-4 text-xs uppercase w-full">Volver al inicio</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Recovery Modal -->
+    <div v-if="showSuccessRecoveryModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div class="bg-white p-6 rounded-xl max-w-md w-full shadow-2xl animate-fade-in text-center relative">
+        <span class="material-symbols-outlined text-5xl text-primary mb-2">verified</span>
+        <h3 class="text-lg font-bold mb-2">Identidad Verificada</h3>
+        <p class="text-sm text-gray-700 mb-4">Estimado Autor, dado que tú certificaste esta obra y por cuestiones de integridad y autoría, emitimos nuevamente el certificado original en un archivo ZIP.</p>
+        
+        <button @click="downloadRecoveredZip" class="btn-black !py-3 !px-6 w-full flex justify-center items-center gap-2 mb-2">
+          <span class="material-symbols-outlined">download</span> Descargar ZIP Original
+        </button>
+        <button @click="$emit('cancel')" class="text-xs text-gray-500 underline mt-2 hover:text-gray-800">Volver al inicio</button>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue';
-import ValidationError from '../../components/ValidationError.vue';
+import { showToast } from '../../services/toastService';
 import { CertificationClient } from '../../clients/CertificationClient';
 
 const props = defineProps({ context: Object });
@@ -95,6 +138,14 @@ const error = ref('');
 const successMsg = ref('');
 const uploadStatus = ref('idle'); // 'idle' | 'error_psd' | 'error_imagen' | 'error_ambos'
 const isProcessing = ref(false);
+const isRecovering = ref(false);
+const showRecoveryModal = ref(false);
+const showSuccessRecoveryModal = ref(false);
+const recoveryCedula = ref('');
+const recoveryAttempts = ref(0);
+const isSystemLocked = ref(false);
+const duplicateHash = ref('');
+const recoveredBlob = ref(null);
 
 const imagePreviewUrl = ref(null);
 
@@ -110,13 +161,13 @@ const validateFile = (file, type) => {
   const ext = file.name.split('.').pop().toLowerCase();
   
   if (type === 'psd' && ext !== 'psd') {
-    error.value = '⚠️ El Archivo Maestro debe ser OBLIGATORIAMENTE un archivo .PSD';
+    showToast('⚠️ El Archivo Maestro debe ser OBLIGATORIAMENTE un archivo .PSD', 'warning');
     uploadStatus.value = 'error_psd';
     return false;
   }
   
   if (type === 'imagen' && !['png', 'jpg', 'jpeg'].includes(ext)) {
-    error.value = '⚠️ La Imagen de Referencia debe ser OBLIGATORIAMENTE formato .PNG o .JPG';
+    showToast('⚠️ La Imagen de Referencia debe ser OBLIGATORIAMENTE formato .PNG o .JPG', 'warning');
     uploadStatus.value = 'error_imagen';
     return false;
   }
@@ -157,7 +208,7 @@ const onDrop = (e, type) => {
 
 const handleBackendError = (errMsg) => {
   console.error("❌ ERROR DEL BACKEND:", errMsg);
-  error.value = errMsg;
+  showToast(errMsg, 'error');
   const msgLower = errMsg.toLowerCase();
   if (msgLower.includes('psd')) {
     uploadStatus.value = 'error_psd';
@@ -172,7 +223,7 @@ const handleBackendError = (errMsg) => {
 
 const validateAndNext = async () => {
   if (!props.context.archivos.psd || !props.context.archivos.imagen) {
-    error.value = 'Ambos archivos son obligatorios.';
+    showToast('Ambos archivos son obligatorios.', 'warning');
     return;
   }
   
@@ -185,20 +236,31 @@ const validateAndNext = async () => {
   
   try {
     isProcessing.value = true;
-    error.value = '';
     successMsg.value = '';
     uploadStatus.value = 'idle';
     
     console.log("Iniciando envío sincrónico de archivos PSD e Imagen al backend...");
     const res = await CertificationClient.initCertificacion(props.context.archivos.psd, props.context.archivos.imagen);
     
+    if (res.estado === 'REQUIERE_CEDULA') {
+      isProcessing.value = false;
+      duplicateHash.value = res.hash_duplicado;
+      showRecoveryModal.value = true;
+      return;
+    }
+
     props.context.expedienteId = res.expediente_id || 'VA-' + Math.floor(Math.random() * 10000);
+    
+    if (res.software_detectado) {
+      props.context.datosObra.software = res.software_detectado;
+    }
+    
     props.context.archivosModificados = false; // Resetear bandera de modificación tras el éxito
     
     console.log("📁 EXPEDIENTE COMPLETADO:", props.context.expedienteId);
     
     isProcessing.value = false;
-    successMsg.value = '✅ Análisis forense completado con éxito. Redirigiendo...';
+    showToast('Análisis forense completado con éxito.', 'success');
     setTimeout(() => { emit('next'); }, 1500);
     
   } catch (err) {
@@ -206,4 +268,62 @@ const validateAndNext = async () => {
     handleBackendError(err.message || 'Error de conexión al enviar los archivos.');
   }
 };
+
+const cancelRecovery = () => {
+  showRecoveryModal.value = false;
+  recoveryCedula.value = '';
+  recoveryAttempts.value = 0;
+  isSystemLocked.value = false;
+  props.context.archivos.imagen = null;
+  props.context.archivos.psd = null;
+  if (imagePreviewUrl.value) URL.revokeObjectURL(imagePreviewUrl.value);
+  imagePreviewUrl.value = null;
+  emit('cancel'); // Vuelve a la boveda / limpia todo
+};
+
+const attemptRecovery = async () => {
+  if (!recoveryCedula.value || isSystemLocked.value) return;
+  // No ocultamos el modal, lo mantenemos abierto para mostrar errores ahí mismo.
+  isProcessing.value = true;
+  isRecovering.value = true;
+
+  try {
+    const blob = await CertificationClient.recuperarCertificado(props.context.archivos.imagen, duplicateHash.value, recoveryCedula.value);
+    recoveredBlob.value = blob;
+    isProcessing.value = false;
+    isRecovering.value = false;
+    showRecoveryModal.value = false; // Cerramos este modal para abrir el de éxito
+    showSuccessRecoveryModal.value = true;
+  } catch (err) {
+    isProcessing.value = false;
+    isRecovering.value = false;
+    recoveryAttempts.value++;
+    
+    if (recoveryAttempts.value >= 3) {
+      isSystemLocked.value = true;
+      showToast("BLOQUEO DE SEGURIDAD: Indicios de robo de autoría detectados.", "error");
+    } else {
+      if (err.message && err.message.includes("ConflictoPropiedad")) {
+        showToast(`Cédula incorrecta. Intento ${recoveryAttempts.value} de 3.`, "error");
+      } else {
+        showToast(err.message || 'Error al verificar la identidad para la recuperación.', "error");
+      }
+    }
+  }
+};
+
+const downloadRecoveredZip = () => {
+  if (!recoveredBlob.value) return;
+  const url = window.URL.createObjectURL(recoveredBlob.value);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "Expediente_Recuperado.zip";
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+  showToast("Descarga completada. El proceso ha finalizado.", "success");
+  setTimeout(() => { emit('cancel'); }, 2000);
+};
+
 </script>

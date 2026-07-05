@@ -1,9 +1,9 @@
 <template>
   <nav class="nav-standard flex justify-between items-center">
     <div class="flex items-center gap-10">
-      <router-link to="/dashboard" class="font-heading font-bold text-xl tracking-tighter uppercase">VerisArt</router-link>
+      <router-link to="/certification" class="text-black font-heading font-bold text-xl tracking-tighter uppercase">VerisArt</router-link>
       <div class="hidden md:flex gap-6 text-sm font-medium text-gray-500">
-        <router-link to="/dashboard" class="text-black border-b-2 border-black pb-1">Bóveda Digital</router-link>
+        <router-link to="/certification" class="text-black border-b-2 border-black pb-1">Certificación de Obras</router-link>
       </div>
     </div>
 

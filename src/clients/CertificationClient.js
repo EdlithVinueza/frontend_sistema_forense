@@ -22,7 +22,30 @@ export const CertificationClient = {
     }
   },
 
+  async recuperarCertificado(imgFile, hashDuplicado, cedula) {
+    const formData = new FormData();
+    formData.append('imagen', imgFile);
+    formData.append('hash_duplicado', hashDuplicado);
+    formData.append('cedula', cedula);
 
+    try {
+      const response = await fetch(`${API_URL_CERT}/recuperar`, {
+        method: 'POST',
+        body: formData
+      });
+      if (!response.ok) {
+        if (response.status === 409) {
+          const errText = await response.text();
+          throw new Error(errText);
+        }
+        throw new Error('Error al recuperar certificado');
+      }
+      return await response.blob();
+    } catch (error) {
+      console.error("CertificationClient Recuperar Error:", error);
+      throw error;
+    }
+  },
 
   async enviarDatosObra(idExpediente, datosObra) {
     try {
@@ -42,19 +65,21 @@ export const CertificationClient = {
     }
   },
 
-  async firmarExpediente(idExpediente, p12File, password) {
-    const formData = new FormData();
-    formData.append('certificado', p12File);
-    formData.append('password', password);
+  async firmarExpediente(idExpediente, password) {
+    const params = new URLSearchParams();
+    params.append('password', password);
 
     try {
       const response = await fetch(`${API_URL_CERT}/${idExpediente}/firmar`, {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params
       });
       if (!response.ok) {
         const errJson = await response.json().catch(() => ({}));
-        throw new Error(errJson.error || 'Contraseña incorrecta o certificado inválido.');
+        throw new Error(errJson.error || 'Contraseña incorrecta o problema de red, intente nuevamente.');
       }
       return await response.json();
     } catch (error) {

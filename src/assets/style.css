@@ -28,6 +28,11 @@ body {
     overflow: hidden;
 }
 
+a, router-link, .router-link-active {
+    color: inherit;
+    text-decoration: none;
+}
+
 main {
     flex: 1;
     overflow-y: auto;
@@ -76,7 +81,7 @@ main {
     font-size: 0.875rem;
     font-weight: 600;
     padding: 0.6rem 1.2rem;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-xl);
     transition: all 0.2s;
     border: none;
     cursor: pointer;
@@ -86,9 +91,46 @@ main {
     gap: 8px;
 }
 
-.btn-black:hover {
+.btn-black:not(:disabled):hover {
     opacity: 0.9;
     transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.btn-black:disabled {
+    background: #9ca3af;
+    color: white;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text-variant);
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-xl);
+    transition: all 0.2s;
+    border: 1px solid var(--outline);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-ghost:not(:disabled):hover {
+    background: var(--surface);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.btn-ghost:disabled {
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
 }
 
 .input-standard {
@@ -116,6 +158,32 @@ main {
     display: flex;
     gap: 12px;
     font-size: 0.85rem;
+}
+
+.alert-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    color: #ea580c; 
+    background-color: #fff7ed; 
+    padding: 0.5rem; 
+    border-radius: var(--radius-md);
+    border: 1px solid #ffedd5; 
+    margin-top: 0.25rem;
+}
+
+.alert-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    color: #dc2626; 
+    background-color: #fef2f2; 
+    padding: 0.5rem; 
+    border-radius: var(--radius-md);
+    border: 1px solid #fee2e2; 
+    margin-top: 0.25rem;
 }
 
 .modal-overlay {

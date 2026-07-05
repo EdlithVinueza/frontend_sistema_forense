@@ -5,10 +5,7 @@
       <p class="text-gray-500 text-xs mt-1">Complete los metadatos técnicos de la obra para el certificado.</p>
     </div>
 
-    <div v-if="generalError" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-xs font-bold rounded flex items-center gap-2">
-      <span class="material-symbols-outlined text-sm">error</span>
-      {{ generalError }}
-    </div>
+
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-left relative">
       <div class="relative">
@@ -48,7 +45,7 @@
 
       <div class="relative">
         <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Fecha de Creación</label>
-        <input v-model="context.datosObra.fecha_creacion" type="date" :class="['input-standard mt-1 w-full bg-white text-gray-600', errors.fecha_creacion ? '!border-red-500 !bg-red-50' : '']">
+        <input v-model="context.datosObra.fecha_creacion" type="date" :max="todayDate" style="accent-color: #10b981;" :class="['input-standard mt-1 w-full bg-white text-gray-600 focus:ring-green-500 focus:border-green-500', errors.fecha_creacion ? '!border-red-500 !bg-red-50' : '']">
         <ValidationError v-if="errors.fecha_creacion" :error="errors.fecha_creacion" />
       </div>
 
@@ -81,7 +78,7 @@
       <button @click="$emit('prev')" class="btn-ghost !px-6 !py-2 uppercase tracking-[0.2em] text-[10px]" :disabled="isLoading">
         <span class="material-symbols-outlined text-sm align-middle">arrow_back</span> Atrás
       </button>
-      <button @click="validateAndNext" class="btn-black !px-8 !py-2 uppercase tracking-[0.2em] text-[10px] relative flex items-center justify-center min-w-[160px]" :disabled="isLoading">
+      <button @click="validateAndNext" class="btn-black !px-8 !py-2 uppercase tracking-[0.2em] text-[10px] min-w-[160px] relative" :disabled="!isFormValid || isLoading">
         <span v-if="isLoading" class="material-symbols-outlined animate-spin absolute">autorenew</span>
         <span :class="{'opacity-0': isLoading}">Siguiente Paso <span class="material-symbols-outlined text-sm align-middle">arrow_forward</span></span>
       </button>
@@ -96,8 +93,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineProps, defineEmits } from 'vue';
+import { ref, reactive, defineProps, defineEmits, computed } from 'vue';
 import ValidationError from '../../components/ValidationError.vue';
+import { showToast } from '../../services/toastService';
 import { CertificationClient } from '../../clients/CertificationClient';
 
 const props = defineProps({ context: Object });
@@ -105,6 +103,13 @@ const emit = defineEmits(['next', 'prev']);
 const errors = reactive({ cedula: '', categoria: '', titulo_obra: '', software: '', fecha_creacion: '', declaraciones: '' });
 const generalError = ref('');
 const isLoading = ref(false);
+
+const todayDate = new Date().toISOString().split('T')[0];
+
+const isFormValid = computed(() => {
+  const d = props.context.datosObra;
+  return d.cedula && d.categoria && d.titulo_obra && d.software && d.fecha_creacion && d.declaracion_derechos && d.declaracion_terminos;
+});
 
 const validateAndNext = async () => {
   Object.keys(errors).forEach(k => errors[k] = '');
@@ -138,6 +143,7 @@ const validateAndNext = async () => {
   } catch (err) {
     console.error("❌ ERROR AL GUARDAR METADATOS:", err);
     generalError.value = err.message || 'Error desconocido al procesar la solicitud.';
+    showToast(generalError.value, 'error');
     
     // Solo mostramos el error de cédula si el backend responde con un mensaje específico sobre la cédula
     if (generalError.value.toLowerCase().includes('cédula') || generalError.value.toLowerCase().includes('cedula')) {
