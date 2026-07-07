@@ -4,21 +4,28 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: '/certification'
+    component: () => import('../views/HomeView.vue')
   },
-
-
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/auth/LoginView.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('../views/auth/RegisterView.vue')
+  },
   {
     path: '/certification',
     name: 'certification',
     component: () => import('../views/certification/CertificationFlow.vue'),
     meta: { requiresAuth: true }
   },
-
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
-    redirect: '/certification'
+    redirect: '/'
   }
 ]
 
@@ -28,20 +35,16 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // Desactivado temporalmente para pruebas (acceso directo a certificación)
-  /*
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const isAuthenticated = localStorage.getItem('estaAutenticado') === 'true';
 
   if (requiresAuth && !isAuthenticated) {
     next('/login');
-  } else if (!requiresAuth && isAuthenticated && (to.path === '/login' || to.path === '/register')) {
-    next('/dashboard');
+  } else if (!requiresAuth && isAuthenticated && (to.path === '/login' || to.path === '/register' || to.path === '/')) {
+    next('/certification');
   } else {
     next();
   }
-  */
-  next();
 });
 
 export default router

@@ -40,8 +40,7 @@ const router = useRouter();
 const userEmail = ref(localStorage.getItem('userEmail') || 'usuario@ejemplo.com');
 
 const logout = () => {
-  localStorage.removeItem('estaAutenticado');
-  localStorage.removeItem('userEmail');
+  localStorage.clear();
   router.push('/login');
 };
 </script>

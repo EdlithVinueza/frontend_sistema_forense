@@ -1,4 +1,4 @@
-const API_URL_CERT = 'http://localhost:8090/api/v1/certificaciones';
+const API_URL_CERT = process.env.VUE_APP_API_CERT || '/api/v1/certificaciones';
 
 export const CertificationClient = {
   async initCertificacion(psdFile, imgFile) {

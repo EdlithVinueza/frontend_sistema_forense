@@ -1,12 +1,15 @@
 <template>
-  <footer class="footer-standard bg-white py-4 px-6 md:px-12 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6 mt-auto">
-    <div class="flex gap-8 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-      <a href="#" class="hover:text-black">Aviso Legal</a>
-      <a href="#" class="hover:text-black">Privacidad</a>
-      <a href="#" class="hover:text-black">Términos</a>
-      <a href="#" class="hover:text-black">Soporte PKI</a>
+  <footer class="bg-black text-white py-12 mt-auto w-full">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-[#6cf8bb]">policy</span>
+        <span class="font-heading font-bold text-lg tracking-tighter uppercase">VerisArt Forense</span>
+      </div>
+      <p class="text-gray-400 text-xs text-center md:text-left">
+        © 2026 Sistema de Certificación Forense. Todos los derechos reservados.<br/>
+        Implementado para el proyecto de titulación.
+      </p>
     </div>
-    <span class="font-heading font-bold text-lg tracking-tighter">VERISART</span>
   </footer>
 </template>
 

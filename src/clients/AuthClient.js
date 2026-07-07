@@ -1,4 +1,4 @@
-const API_URL_AUTH = 'http://localhost:8080/usuarios';
+const API_URL_AUTH = process.env.VUE_APP_API_AUTH || '/usuarios';
 
 export const AuthClient = {
   async register(userData) {

@@ -3,11 +3,11 @@ module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
     proxy: {
-      '/api': {
+      '/api/v1/certificaciones': {
         target: 'http://localhost:8090',
         changeOrigin: true
       },
-      '/usuarios': {
+      '/api/v1/auth': {
         target: 'http://localhost:8080',
         changeOrigin: true
       }
