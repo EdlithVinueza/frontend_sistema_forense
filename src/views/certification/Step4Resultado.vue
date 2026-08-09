@@ -60,7 +60,7 @@ const truncateString = (str, num) => {
 
 const descargarCertificados = () => {
   // Disparamos la descarga directamente hacia el servidor Quarkus
-  const backendUrl = `http://localhost:8090/api/v1/certificaciones/${props.context.expedienteId}/descargar`;
+  const backendUrl = `http://localhost:8080/api/v1/certificaciones/${props.context.expedienteId}/descargar`;
   window.open(backendUrl, '_blank');
 
   // Lanzar confeti

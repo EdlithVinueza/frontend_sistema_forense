@@ -1,12 +1,9 @@
 import { shallowMount } from '@vue/test-utils'
-import HelloWorld from '@/components/HelloWorld.vue'
+import Footer from '@/components/Footer.vue'
 
-describe('HelloWorld.vue', () => {
-  it('renders props.msg when passed', () => {
-    const msg = 'new message'
-    const wrapper = shallowMount(HelloWorld, {
-      props: { msg }
-    })
-    expect(wrapper.text()).toMatch(msg)
+describe('Footer.vue', () => {
+  it('renders footer title correctly', () => {
+    const wrapper = shallowMount(Footer)
+    expect(wrapper.text()).toMatch('VerisArt Forense')
   })
 })

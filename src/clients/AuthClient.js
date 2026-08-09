@@ -1,4 +1,4 @@
-const API_URL_AUTH = process.env.VUE_APP_API_AUTH || '/usuarios';
+const API_URL_AUTH = process.env.VUE_APP_API_AUTH || '/api/v1/auth';
 
 export const AuthClient = {
   async register(userData) {
