@@ -251,6 +251,8 @@ const handleRegister = async () => {
 
         if (response.ok || response.status === 201) {
             uploadStatus.value = 'success';
+            localStorage.setItem('userEmail', form.correo);
+            localStorage.setItem('userCedula', form.cedula);
             showToast('Cuenta creada con éxito. Por favor inicie sesión.', 'success');
             setTimeout(() => {
                 router.push('/login');

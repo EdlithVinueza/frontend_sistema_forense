@@ -1,5 +1,5 @@
 <template>
-  <nav class="nav-standard flex justify-between items-center">
+  <nav class="nav-standard flex justify-between items-center !py-2 !px-6">
     <div class="flex items-center gap-10">
       <router-link to="/certification" class="text-black font-heading font-bold text-xl tracking-tighter uppercase">VerisArt</router-link>
       <div class="hidden md:flex gap-6 text-sm font-medium text-gray-500">

@@ -110,11 +110,15 @@ const handleLogin = async () => {
             const data = await response.json();
             localStorage.setItem('estaAutenticado', 'true');
             localStorage.setItem('userEmail', data.correo || email.value);
+            if (data.cedula) {
+                localStorage.setItem('userCedula', data.cedula);
+            }
             showToast('Sesión iniciada con éxito', 'success');
             router.push('/certification');
         } else {
-            const errorText = await response.text();
-            throw new Error(errorText || 'Credenciales incorrectas');
+            const errorData = await response.json().catch(() => null);
+            const mensaje = (errorData && errorData.error) ? errorData.error : 'Credenciales incorrectas';
+            throw new Error(mensaje);
         }
     } catch (error) {
         console.error("Login error:", error);

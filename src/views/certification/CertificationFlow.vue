@@ -1,14 +1,14 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-[#f7f9fb]">
+  <div class="flex flex-col h-screen overflow-hidden bg-[#f7f9fb]">
     <NavbarSession />
     
-    <main class="flex-grow flex p-6">
-      <div class="max-w-7xl w-full m-auto">
+    <main class="flex-grow overflow-y-auto p-2 md:p-3 flex justify-center items-start">
+      <div class="max-w-4xl w-full mx-auto my-auto py-1">
         <!-- Vista del flujo -->
         <div class="w-full">
           <StepIndicator :currentStep="currentStep" />
           
-          <div class="mt-8">
+          <div class="mt-2">
             <component 
               :is="currentStepComponent" 
               :context="certContext"

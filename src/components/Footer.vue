@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-black text-white py-4 w-full mt-auto border-t border-gray-800 flex-shrink-0">
+  <footer class="bg-black text-white py-1.5 w-full mt-auto border-t border-gray-800 flex-shrink-0">
     <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-3">
       <div class="flex items-center gap-2">
         <span class="material-symbols-outlined text-[#6cf8bb] text-lg">policy</span>

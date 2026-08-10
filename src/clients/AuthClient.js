@@ -33,7 +33,10 @@ export const AuthClient = {
         })
       });
       
-      if (!response.ok) throw new Error('Credenciales incorrectas');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error((errorData && errorData.error) ? errorData.error : 'Credenciales incorrectas');
+      }
       return await response.json();
     } catch (error) {
       console.error("AuthClient Login Error:", error);

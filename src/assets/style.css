@@ -267,7 +267,7 @@ main {
     justify-content: space-between;
     align-items: flex-start;
     max-width: 600px;
-    margin: 0 auto 4rem auto;
+    margin: 0 auto 1rem auto;
     position: relative;
 }
 
