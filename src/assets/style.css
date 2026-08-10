@@ -300,10 +300,10 @@ main {
 
 .step-item.active .step-circle,
 .step-item.completed .step-circle {
-    background: var(--secondary);
-    border-color: var(--secondary);
+    background: #00b562;
+    border-color: #00b562;
     color: white;
-    box-shadow: 0 0 0 10px #7df1b8;
+    box-shadow: 0 0 0 8px #e6fbf2;
 }
 
 .step-label {
@@ -318,7 +318,7 @@ main {
 
 .step-item.active .step-label,
 .step-item.completed .step-label {
-    color: var(--secondary);
+    color: #00b562;
 }
 
 .step-connector {

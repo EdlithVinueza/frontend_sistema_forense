@@ -1,142 +1,147 @@
 <template>
-  <div class="flex flex-col bg-[#f7f9fb] h-screen overflow-y-auto">
-    <nav class="nav-standard flex justify-between items-center bg-white shadow-sm px-6 py-4">
+  <div class="flex flex-col bg-[#f7f9fb] h-screen overflow-y-auto overflow-x-hidden">
+    <nav class="nav-standard flex justify-between items-center bg-white/95 backdrop-blur-md shadow-sm px-8 py-3 sticky top-0 w-full z-50">
         <div class="flex items-center gap-10">
             <router-link to="/" class="font-heading font-bold text-xl tracking-tighter uppercase text-black">VerisArt</router-link>
-            <div class="hidden md:flex gap-6 text-sm font-medium text-gray-500">
+            <div class="hidden md:flex gap-6 text-sm font-medium text-gray-600">
                 <router-link to="/" class="hover:text-black">Sobre Nosotros</router-link>
             </div>
         </div>
         <div class="flex items-center gap-6">
-            <router-link to="/login" class="text-sm font-semibold text-black">Iniciar Sesión</router-link>
-            <router-link to="/register" class="btn-black !py-2 !text-xs uppercase tracking-widest">Registrarse</router-link>
+            <router-link to="/login" class="text-sm font-semibold text-gray-800 hover:text-black">Iniciar Sesión</router-link>
+            <router-link to="/register" class="btn-black !py-2 !px-4 !text-xs uppercase tracking-widest hover:scale-105 transition-transform">Registrarse</router-link>
         </div>
     </nav>
 
-    <main class="flex-grow flex p-6">
-        <div class="max-w-6xl w-full flex flex-col md:flex-row card-main m-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <main class="flex-grow flex items-center justify-center p-3 md:p-6">
+        <div class="max-w-5xl w-full flex flex-col md:flex-row card-main m-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
             
-            <div class="w-full md:w-5/12 relative p-6 md:p-8 text-white flex flex-col justify-between bg-black min-h-[400px]">
-                <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1000"
-                    class="absolute inset-0 w-full h-full object-cover opacity-60">
+            <!-- Columna Izquierda con Imagen Conceptual -->
+            <div class="w-full md:w-5/12 relative p-6 md:p-8 text-white flex flex-col justify-between bg-black min-h-[380px] overflow-hidden">
+                <img src="/register_art_pki.png"
+                     alt="Registro de Identidad Digital PKI"
+                     class="absolute inset-0 w-full h-full object-cover object-center opacity-90 filter brightness-[1.05]">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent z-0"></div>
+
                 <div class="relative z-10">
-                    <span class="font-mono text-[9px] text-[#6cf8bb] tracking-[0.3em] uppercase font-bold">Protocolo de Registro</span>
-                    <h2 class="text-2xl font-heading font-bold mt-2 leading-tight">Acceso Forense Autorizado.</h2>
-                    <p class="text-gray-300 mt-2 text-xs leading-relaxed max-w-xs">
-                        Establezca su identidad única dentro del ecosistema de certificación de arte más seguro del mundo.
+                    <span class="font-mono text-[9px] text-[#6cf8bb] tracking-[0.25em] uppercase font-bold">PROTOCOLO DE REGISTRO</span>
+                    <h2 class="text-2xl font-heading font-bold mt-1 leading-tight">Acceso Forense Autorizado.</h2>
+                    <p class="text-gray-200 mt-1.5 text-xs leading-relaxed max-w-xs">
+                        Establezca su identidad única dentro del ecosistema de certificación de arte más seguro.
                     </p>
                 </div>
                 
-                <div class="relative z-10 bg-black/50 backdrop-blur-md border border-white/10 p-3 rounded-xl mt-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="material-symbols-outlined text-[#6cf8bb]">verified_user</span>
-                        <span class="text-[10px] font-bold uppercase tracking-widest">Seguridad de Nivel Profesional</span>
+                <div class="relative z-10 bg-black/60 backdrop-blur-md border border-white/15 p-3 rounded-xl mt-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="material-symbols-outlined text-[#6cf8bb] text-sm">verified_user</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-white">Seguridad de Nivel Profesional</span>
                     </div>
-                    <p class="text-[11px] text-gray-300 leading-normal">
-                        Su firma electrónica será generada bajo estándares PKI. VerisArt no almacena su clave privada por protocolo de seguridad Clase-4.
+                    <p class="text-[10.5px] text-gray-300 leading-normal">
+                        Su firma electrónica será vinculada bajo estándares PKI. VerisArt garantiza privacidad y custodia segura.
                     </p>
                 </div>
             </div>
 
-            <div class="w-full md:w-7/12 p-6 md:px-8 md:py-4 bg-white flex flex-col justify-center">
+            <!-- Columna Derecha con Formulario Compacto -->
+            <div class="w-full md:w-7/12 p-6 md:px-8 md:py-5 bg-white flex flex-col justify-center">
                 <div class="mb-3">
                     <h1 class="text-xl font-heading font-bold text-gray-900">Crear Cuenta Forense</h1>
                     <p class="text-gray-500 text-[10px] mt-0.5">Complete todos los campos para la validación de su perfil profesional.</p>
                 </div>
 
-                <form @submit.prevent="handleRegister" class="space-y-3">
+                <form @submit.prevent="handleRegister" class="space-y-2.5">
                     <div>
-                        <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Cédula / Identidad</label>
-                        <input v-model="form.cedula" type="text" class="input-standard font-mono mt-1 w-full" placeholder="Ej. 172XXXXXXX" required>
+                        <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Cédula / Identidad</label>
+                        <input v-model="form.cedula" type="text" class="input-standard font-mono mt-0.5 w-full !text-xs !py-1.5" placeholder="Ej. 172XXXXXXX" required>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Nombres completos</label>
-                            <input v-model="form.nombres" type="text" class="input-standard mt-1 w-full" placeholder="NOMBRES" required>
+                            <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Nombres completos</label>
+                            <input v-model="form.nombres" type="text" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="NOMBRES" required>
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Apellidos completos</label>
-                            <input v-model="form.apellidos" type="text" class="input-standard mt-1 w-full" placeholder="APELLIDOS" required>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Correo electrónico</label>
-                            <input v-model="form.correo" type="email" class="input-standard mt-1 w-full" placeholder="usuario@ejemplo.com" required>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Seudónimo <span class="normal-case text-gray-500 font-normal">(Opcional)</span></label>
-                            <input v-model="form.nombreArtistico" type="text" class="input-standard mt-1 w-full" placeholder="Ej. Alex Thorne">
+                            <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Apellidos completos</label>
+                            <input v-model="form.apellidos" type="text" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="APELLIDOS" required>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Contraseña Login</label>
+                            <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Correo electrónico</label>
+                            <input v-model="form.correo" type="email" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="usuario@ejemplo.com" required>
+                        </div>
+                        <div>
+                            <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Seudónimo <span class="normal-case text-gray-400 font-normal">(Opcional)</span></label>
+                            <input v-model="form.nombreArtistico" type="text" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="Ej. Alex Thorne">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Contraseña Login</label>
                             <div class="relative">
-                                <input v-model="form.password" :type="showPassword ? 'text' : 'password'" class="input-standard mt-1 w-full pr-10" placeholder="••••••••" required>
-                                <button @click="showPassword = !showPassword" type="button" class="absolute inset-y-0 right-0 top-1 flex items-center pr-3 text-gray-400 hover:text-black">
-                                    <span class="material-symbols-outlined text-lg">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+                                <input v-model="form.password" :type="showPassword ? 'text' : 'password'" class="input-standard mt-0.5 w-full !text-xs !py-1.5 pr-8" placeholder="••••••••" required>
+                                <button @click="showPassword = !showPassword" type="button" class="absolute inset-y-0 right-0 top-0.5 flex items-center pr-2.5 text-gray-400 hover:text-black">
+                                    <span class="material-symbols-outlined text-base">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
                                 </button>
                             </div>
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Confirmar Contraseña</label>
+                            <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Confirmar Contraseña</label>
                             <div class="relative">
-                                <input v-model="form.confirmPassword" :type="showConfirmPassword ? 'text' : 'password'" class="input-standard mt-1 w-full pr-10" placeholder="••••••••" required>
-                                <button @click="showConfirmPassword = !showConfirmPassword" type="button" class="absolute inset-y-0 right-0 top-1 flex items-center pr-3 text-gray-400 hover:text-black">
-                                    <span class="material-symbols-outlined text-lg">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+                                <input v-model="form.confirmPassword" :type="showConfirmPassword ? 'text' : 'password'" class="input-standard mt-0.5 w-full !text-xs !py-1.5 pr-8" placeholder="••••••••" required>
+                                <button @click="showConfirmPassword = !showConfirmPassword" type="button" class="absolute inset-y-0 right-0 top-0.5 flex items-center pr-2.5 text-gray-400 hover:text-black">
+                                    <span class="material-symbols-outlined text-base">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex flex-col gap-3">
-                        <div :class="['flex flex-row items-center justify-between px-4 py-2 transition-all relative overflow-hidden border-2 border-dashed rounded-lg', p12Class || 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400']">
-                            <div class="flex items-center gap-2 overflow-hidden mr-2">
-                                <span class="material-symbols-outlined text-xl text-gray-400 flex-shrink-0">vpn_key</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-0.5">
+                        <div :class="['flex flex-row items-center justify-between px-3 py-1.5 transition-all relative overflow-hidden border-2 border-dashed rounded-lg', p12Class || 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400']">
+                            <div class="flex items-center gap-1.5 overflow-hidden mr-1">
+                                <span class="material-symbols-outlined text-lg text-gray-400 flex-shrink-0">vpn_key</span>
                                 <div class="text-left overflow-hidden">
-                                    <p v-if="!form.firmaP12" class="text-[10px] font-bold text-gray-800 whitespace-nowrap">Archivo PKI (.p12)</p>
-                                    <p v-else class="text-[10px] text-gray-900 font-bold truncate max-w-[140px] md:max-w-[200px]" :title="form.firmaP12.name">{{ form.firmaP12.name }}</p>
+                                    <p v-if="!form.firmaP12" class="text-[9.5px] font-bold text-gray-800 whitespace-nowrap">Archivo PKI (.p12)</p>
+                                    <p v-else class="text-[9.5px] text-gray-900 font-bold truncate max-w-[100px]" :title="form.firmaP12.name">{{ form.firmaP12.name }}</p>
                                 </div>
                             </div>
-                            <label class="btn-black !py-1.5 !px-3 !text-[9px] cursor-pointer m-0 flex items-center gap-1 flex-shrink-0 whitespace-nowrap">
-                                <span class="material-symbols-outlined text-[12px]">upload_file</span> 
-                                {{ form.firmaP12 ? 'Cambiar Archivo' : 'Subir Archivo' }}
+                            <label class="btn-black !py-1 !px-2.5 !text-[8.5px] cursor-pointer m-0 flex items-center gap-1 flex-shrink-0 whitespace-nowrap">
+                                <span class="material-symbols-outlined text-[11px]">upload_file</span> 
+                                {{ form.firmaP12 ? 'Cambiar' : 'Subir' }}
                                 <input type="file" class="hidden" accept=".p12" @change="handleFileUpload">
                             </label>
                         </div>
                         
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Clave del .P12</label>
+                            <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Clave del .P12</label>
                             <div class="relative">
-                                <input v-model="form.p12Password" :type="showP12Password ? 'text' : 'password'" class="input-standard mt-1 w-full pr-10" placeholder="••••••••" required>
-                                <button @click="showP12Password = !showP12Password" type="button" class="absolute inset-y-0 right-0 top-1 flex items-center pr-3 text-gray-400 hover:text-black">
-                                    <span class="material-symbols-outlined text-lg">{{ showP12Password ? 'visibility_off' : 'visibility' }}</span>
+                                <input v-model="form.p12Password" :type="showP12Password ? 'text' : 'password'" class="input-standard mt-0.5 w-full !text-xs !py-1.5 pr-8" placeholder="••••••••" required>
+                                <button @click="showP12Password = !showP12Password" type="button" class="absolute inset-y-0 right-0 top-0.5 flex items-center pr-2.5 text-gray-400 hover:text-black">
+                                    <span class="material-symbols-outlined text-base">{{ showP12Password ? 'visibility_off' : 'visibility' }}</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex items-start gap-3 py-1 mt-2">
-                        <input v-model="form.aceptaTerminos" type="checkbox" id="terms-check" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-black focus:ring-black" required>
-                        <label class="text-[10px] text-gray-500 leading-relaxed">
+                    <div class="flex items-center gap-2 py-0.5">
+                        <input v-model="form.aceptaTerminos" type="checkbox" id="terms-check" class="h-3.5 w-3.5 rounded border-gray-300 text-black focus:ring-black" required>
+                        <label class="text-[10px] text-gray-500">
                             Acepto <button type="button" @click="showModal = true" class="text-secondary font-bold underline">términos de uso</button> y tratamiento de datos.
                         </label>
                     </div>
 
                     <button type="submit" 
                             :disabled="!isFormValid || isLoading"
-                            :class="['w-full py-3 text-[10px] uppercase tracking-[0.2em] font-bold mt-2 shadow-lg flex justify-center items-center gap-2 transition-all', 
+                            :class="['w-full py-2.5 text-[9.5px] uppercase tracking-[0.2em] font-bold mt-1 shadow-md flex justify-center items-center gap-2 transition-all', 
                                     isFormValid ? 'btn-black shadow-black/10' : 'bg-gray-300 text-gray-500 cursor-not-allowed rounded-lg']">
                         <span v-if="isLoading" class="material-symbols-outlined animate-spin text-sm">autorenew</span>
                         <span>Crear Cuenta y Generar PKI</span>
-                        <span v-if="!isLoading" class="material-symbols-outlined text-sm">shield</span>
+                        <span v-if="!isLoading" class="material-symbols-outlined text-xs">shield</span>
                     </button>
                     
-                    <p class="mt-3 text-center text-xs text-gray-500">
+                    <p class="mt-2 text-center text-xs text-gray-500">
                         ¿Ya tienes una cuenta? <router-link to="/login" class="text-secondary font-bold hover:underline">Inicia Sesión</router-link>
                     </p>
                 </form>
@@ -146,40 +151,30 @@
 
     <!-- MODAL DE TÉRMINOS -->
     <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-        <div class="bg-white p-8 rounded-2xl max-w-xl w-full m-4 shadow-2xl border border-gray-100 relative">
+        <div class="bg-white p-6 rounded-2xl max-w-xl w-full m-4 shadow-2xl border border-gray-100 relative">
             <button type="button" @click="showModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors" title="Cerrar">
                 <span class="material-symbols-outlined">close</span>
             </button>
-            <h3 class="font-heading font-bold text-2xl mb-4">Protocolo Legal VerisArt</h3>
-            <div class="h-64 overflow-y-auto text-sm text-gray-600 mb-8 pr-4 leading-relaxed font-body">
-                <p class="mb-4"><b>1. Identidad Digital:</b> Al registrarse, usted garantiza que los datos proporcionados son verídicos y corresponden a su identidad legal o profesional.</p>
-                <p class="mb-4"><b>2. Custodia de Firma (.p12):</b> Usted reconoce que VerisArt no almacena su contraseña de firma. En caso de pérdida, la recuperación del acceso a la firma es imposible por diseño de seguridad.</p>
+            <h3 class="font-heading font-bold text-xl mb-3">Protocolo Legal VerisArt</h3>
+            <div class="h-56 overflow-y-auto text-xs text-gray-600 mb-6 pr-3 leading-relaxed font-body">
+                <p class="mb-3"><b>1. Identidad Digital:</b> Al registrarse, usted garantiza que los datos proporcionados son verídicos y corresponden a su identidad legal o profesional.</p>
+                <p class="mb-3"><b>2. Custodia de Firma (.p12):</b> Usted reconoce que VerisArt no almacena su contraseña de firma. En caso de pérdida, la recuperación del acceso a la firma es imposible por diseño de seguridad.</p>
                 <p><b>3. Responsabilidad:</b> El uso indebido de las certificaciones emitidas bajo su firma será responsabilidad exclusiva del titular de la cuenta.</p>
             </div>
-            <button @click="acceptTerms" class="btn-black w-full py-4 uppercase font-bold tracking-widest text-xs">Entiendo y Acepto los Protocolos</button>
+            <button @click="acceptTerms" class="btn-black w-full py-3 uppercase font-bold tracking-widest text-xs">Entiendo y Acepto los Protocolos</button>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-black text-white py-12 mt-auto">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-[#6cf8bb]">policy</span>
-                <span class="font-heading font-bold text-lg tracking-tighter uppercase">VerisArt Forense</span>
-            </div>
-            <p class="text-gray-400 text-xs text-center md:text-left">
-                © 2026 Sistema de Certificación Forense. Todos los derechos reservados.<br/>
-                Implementado para el proyecto de titulación.
-            </p>
-        </div>
-    </footer>
+    <!-- Footer Reutilizable Compacto -->
+    <Footer />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, toRaw } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { showToast } from '../../services/toastService';
+import Footer from '../../components/Footer.vue';
 
 const router = useRouter();
 const showModal = ref(false);
@@ -187,7 +182,7 @@ const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const showP12Password = ref(false);
 const isLoading = ref(false);
-const uploadStatus = ref('idle'); // idle, error, success
+const uploadStatus = ref('idle');
 
 const form = reactive({
     cedula: '',
@@ -224,7 +219,7 @@ const p12Class = computed(() => {
 
 const handleFileUpload = (event) => {
     form.firmaP12 = event.target.files[0];
-    uploadStatus.value = 'idle'; // Reset status on new file
+    uploadStatus.value = 'idle';
 };
 
 const acceptTerms = () => {

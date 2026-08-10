@@ -55,13 +55,13 @@ const getStepClass = (step) => {
 };
 
 const getLineClass = (step) => {
-  if (props.currentStep > step) return '!bg-[#7df1b8]';
+  if (props.currentStep > step) return '!bg-[#00b562]';
   return '';
 };
 
 const getLineStyle = (step) => {
   if (props.currentStep === step) {
-    return 'background: linear-gradient(to right, #7df1b8 50%, #e2e8f0 50%);';
+    return 'background: linear-gradient(to right, #00b562 50%, #e2e8f0 50%);';
   }
   return '';
 };
