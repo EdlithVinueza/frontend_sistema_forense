@@ -113,6 +113,12 @@ const handleLogin = async () => {
             if (data.cedula) {
                 localStorage.setItem('userCedula', data.cedula);
             }
+            if (data.nombres) {
+                localStorage.setItem('userNombres', data.nombres);
+            }
+            if (data.apellidos) {
+                localStorage.setItem('userApellidos', data.apellidos);
+            }
             showToast('Sesión iniciada con éxito', 'success');
             router.push('/certification');
         } else {

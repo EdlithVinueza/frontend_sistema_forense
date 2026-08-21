@@ -17,6 +17,7 @@
           <div class="bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden">
             <div class="p-4 border-b border-gray-50 bg-[#f7f9fb]">
               <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Agente Autorizado</p>
+              <p v-if="userDisplayName" class="text-sm font-bold text-gray-900 truncate">{{ userDisplayName }}</p>
               <p class="text-xs font-mono text-gray-900 truncate">{{ userEmail }}</p>
             </div>
             <div class="p-2">
@@ -38,6 +39,11 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const userEmail = ref(localStorage.getItem('userEmail') || 'usuario@ejemplo.com');
+const userDisplayName = ref(
+  [localStorage.getItem('userNombres'), localStorage.getItem('userApellidos')]
+    .filter(Boolean)
+    .join(' ')
+);
 
 const logout = () => {
   localStorage.clear();
