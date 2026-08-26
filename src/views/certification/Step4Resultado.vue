@@ -47,6 +47,8 @@
 import { defineProps, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 import confetti from 'canvas-confetti';
+import { withAuthHeader } from '../../services/authToken';
+import { showToast } from '../../services/toastService';
 
 const props = defineProps({ context: Object });
 const emit = defineEmits(['complete']);
@@ -58,17 +60,34 @@ const truncateString = (str, num) => {
   return str.slice(0, num) + '...';
 };
 
-const descargarCertificados = () => {
-  // Disparamos la descarga directamente hacia el servidor Quarkus
+const descargarCertificados = async () => {
+  // window.open no puede llevar el header Authorization, así que se pide el
+  // ZIP con fetch y se dispara la descarga desde el blob resultante.
   const backendUrl = `http://localhost:8080/api/v1/certificaciones/${props.context.expedienteId}/descargar`;
-  window.open(backendUrl, '_blank');
+  try {
+    const response = await fetch(backendUrl, { headers: withAuthHeader() });
+    if (!response.ok) {
+      throw new Error('No se pudo descargar el certificado.');
+    }
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Expediente_Forense_${props.context.expedienteId}.zip`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
 
-  // Lanzar confeti
-  confetti({
-    particleCount: 150,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  } catch (error) {
+    console.error('Descarga error:', error);
+    showToast(error.message || 'Error al descargar el certificado', 'error');
+  }
 };
 
 const certificarOtra = () => {
@@ -76,8 +95,7 @@ const certificarOtra = () => {
 };
 
 const cerrarSesion = () => {
-  localStorage.removeItem('estaAutenticado');
-  localStorage.removeItem('userEmail');
+  localStorage.clear();
   router.push('/login');
 };
 </script>

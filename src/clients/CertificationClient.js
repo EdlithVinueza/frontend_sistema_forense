@@ -1,3 +1,5 @@
+import { withAuthHeader } from '../services/authToken';
+
 const API_URL_CERT = process.env.VUE_APP_API_CERT || '/api/v1/certificaciones';
 
 export const CertificationClient = {
@@ -9,6 +11,7 @@ export const CertificationClient = {
     try {
       const response = await fetch(`${API_URL_CERT}/init`, {
         method: 'POST',
+        headers: withAuthHeader(),
         body: formData
       });
       if (!response.ok) {
@@ -31,6 +34,7 @@ export const CertificationClient = {
     try {
       const response = await fetch(`${API_URL_CERT}/recuperar`, {
         method: 'POST',
+        headers: withAuthHeader(),
         body: formData
       });
       if (!response.ok) {
@@ -51,7 +55,7 @@ export const CertificationClient = {
     try {
       const response = await fetch(`${API_URL_CERT}/${idExpediente}/datos`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: withAuthHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(datosObra)
       });
       if (!response.ok) {
@@ -72,9 +76,7 @@ export const CertificationClient = {
     try {
       const response = await fetch(`${API_URL_CERT}/${idExpediente}/firmar`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
+        headers: withAuthHeader({ 'Content-Type': 'application/x-www-form-urlencoded' }),
         body: params
       });
       if (!response.ok) {

@@ -108,16 +108,18 @@ const handleLogin = async () => {
 
         if (response.ok) {
             const data = await response.json();
+            const user = data.user || {};
             localStorage.setItem('estaAutenticado', 'true');
-            localStorage.setItem('userEmail', data.correo || email.value);
-            if (data.cedula) {
-                localStorage.setItem('userCedula', data.cedula);
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('userEmail', user.correo || email.value);
+            if (user.cedula) {
+                localStorage.setItem('userCedula', user.cedula);
             }
-            if (data.nombres) {
-                localStorage.setItem('userNombres', data.nombres);
+            if (user.nombres) {
+                localStorage.setItem('userNombres', user.nombres);
             }
-            if (data.apellidos) {
-                localStorage.setItem('userApellidos', data.apellidos);
+            if (user.apellidos) {
+                localStorage.setItem('userApellidos', user.apellidos);
             }
             showToast('Sesión iniciada con éxito', 'success');
             router.push('/certification');
