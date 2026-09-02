@@ -157,7 +157,9 @@ const validateAndNext = async () => {
     setTimeout(() => { emit('next'); }, 600);
   } catch (err) {
     console.error("❌ ERROR AL GUARDAR METADATOS:", err);
-    generalError.value = err.message || 'Error desconocido al procesar la solicitud.';
+    generalError.value = err instanceof TypeError
+      ? 'No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.'
+      : (err.message || 'Error desconocido al procesar la solicitud.');
     showToast(generalError.value, 'error');
     
     if (generalError.value.toLowerCase().includes('cédula') || generalError.value.toLowerCase().includes('cedula')) {

@@ -265,7 +265,10 @@ const validateAndNext = async () => {
     
   } catch (err) {
     isProcessing.value = false;
-    handleBackendError(err.message || 'Error de conexión al enviar los archivos.');
+    const mensaje = err instanceof TypeError
+      ? 'No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.'
+      : (err.message || 'Error de conexión al enviar los archivos.');
+    handleBackendError(mensaje);
   }
 };
 

@@ -41,6 +41,8 @@
                     <div>
                         <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Correo Electrónico</label>
                         <input v-model="email" type="email" class="input-standard w-full !text-sm mt-1" placeholder="usuario@ejemplo.com" required>
+                        <p v-if="!email" class="text-[10px] text-gray-400 mt-1 text-left">Ej. usuario@ejemplo.com</p>
+                        <p v-else-if="!correoValido" class="text-[10px] text-red-500 mt-1 text-left">Ingresa un correo electrónico válido.</p>
                     </div>
 
                     <div>
@@ -86,8 +88,11 @@ const password = ref('');
 const showPassword = ref(false);
 const isLoading = ref(false);
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const correoValido = computed(() => EMAIL_REGEX.test(email.value));
+
 const isFormValid = computed(() => {
-    return email.value.trim() !== '' && password.value.trim() !== '';
+    return email.value.trim() !== '' && correoValido.value && password.value.trim() !== '';
 });
 
 const handleLogin = async () => {
@@ -130,7 +135,10 @@ const handleLogin = async () => {
         }
     } catch (error) {
         console.error("Login error:", error);
-        showToast(error.message || 'Error al conectar con el servidor', 'error');
+        const mensaje = error instanceof TypeError
+            ? 'No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.'
+            : (error.message || 'Ocurrió un error inesperado. Intente nuevamente.');
+        showToast(mensaje, 'error');
     } finally {
         isLoading.value = false;
     }

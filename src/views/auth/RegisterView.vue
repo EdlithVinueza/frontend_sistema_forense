@@ -52,17 +52,22 @@
                 <form @submit.prevent="handleRegister" class="space-y-2.5">
                     <div>
                         <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Cédula / Identidad</label>
-                        <input v-model="form.cedula" type="text" class="input-standard font-mono mt-0.5 w-full !text-xs !py-1.5" placeholder="Ej. 172XXXXXXX" required>
+                        <input v-model="form.cedula" type="text" class="input-standard font-mono mt-0.5 w-full !text-xs !py-1.5" placeholder="Ingrese su número de cédula" required>
+                        <p class="text-[9px] text-gray-400 mt-0.5 text-left">Ej. 1712345678 (10 dígitos, sin guiones ni espacios)</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
                             <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Nombres completos</label>
                             <input v-model="form.nombres" type="text" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="NOMBRES" required>
+                            <p v-if="!form.nombres" class="text-[9px] text-gray-400 mt-0.5 text-left">Ej. MARIA JOSE (solo letras)</p>
+                            <p v-else-if="!nombresValido" class="text-[9px] text-red-500 mt-0.5 text-left">Solo letras y espacios, sin números ni símbolos.</p>
                         </div>
                         <div>
                             <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Apellidos completos</label>
                             <input v-model="form.apellidos" type="text" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="APELLIDOS" required>
+                            <p v-if="!form.apellidos" class="text-[9px] text-gray-400 mt-0.5 text-left">Ej. PEREZ GARCIA (solo letras)</p>
+                            <p v-else-if="!apellidosValido" class="text-[9px] text-red-500 mt-0.5 text-left">Solo letras y espacios, sin números ni símbolos.</p>
                         </div>
                     </div>
 
@@ -70,10 +75,13 @@
                         <div>
                             <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Correo electrónico</label>
                             <input v-model="form.correo" type="email" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="usuario@ejemplo.com" required>
+                            <p v-if="!form.correo" class="text-[9px] text-gray-400 mt-0.5 text-left">Ej. usuario@ejemplo.com</p>
+                            <p v-else-if="!correoValido" class="text-[9px] text-red-500 mt-0.5 text-left">Ingresa un correo electrónico válido.</p>
                         </div>
                         <div>
                             <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Seudónimo <span class="normal-case text-gray-400 font-normal">(Opcional)</span></label>
-                            <input v-model="form.nombreArtistico" type="text" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="Ej. Alex Thorne">
+                            <input v-model="form.nombreArtistico" type="text" class="input-standard mt-0.5 w-full !text-xs !py-1.5" placeholder="Nombre artístico">
+                            <p class="text-[9px] text-gray-400 mt-0.5 text-left">Ej. Alex Thorne</p>
                         </div>
                     </div>
 
@@ -86,6 +94,7 @@
                                     <span class="material-symbols-outlined text-base">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
                                 </button>
                             </div>
+                            <p class="text-[9px] mt-0.5 text-left" :class="form.password && !passwordValida ? 'text-red-500' : 'text-gray-400'">Mín. 8 caracteres, mayúscula, minúscula, número y símbolo.</p>
                         </div>
                         <div>
                             <label class="text-[9.5px] font-bold text-gray-400 uppercase tracking-widest">Confirmar Contraseña</label>
@@ -95,6 +104,7 @@
                                     <span class="material-symbols-outlined text-base">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
                                 </button>
                             </div>
+                            <p v-if="form.confirmPassword && form.password !== form.confirmPassword" class="text-[9px] text-red-500 mt-0.5 text-left">Las contraseñas no coinciden.</p>
                         </div>
                     </div>
 
@@ -137,7 +147,7 @@
                             :class="['w-full py-2.5 text-[9.5px] uppercase tracking-[0.2em] font-bold mt-1 shadow-md flex justify-center items-center gap-2 transition-all', 
                                     isFormValid ? 'btn-black shadow-black/10' : 'bg-gray-300 text-gray-500 cursor-not-allowed rounded-lg']">
                         <span v-if="isLoading" class="material-symbols-outlined animate-spin text-sm">autorenew</span>
-                        <span>Crear Cuenta y Generar PKI</span>
+                        <span>Crear Cuenta</span>
                         <span v-if="!isLoading" class="material-symbols-outlined text-xs">shield</span>
                     </button>
                     
@@ -197,12 +207,28 @@ const form = reactive({
     firmaP12: null
 });
 
+// Regex de contraseña segura: mín. 8 caracteres, al menos una mayúscula, una
+// minúscula, un número y un símbolo — exigido para la defensa como evidencia
+// de una política de contraseñas real en el prototipo funcional.
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const NOMBRE_REGEX = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+$/;
+
+const correoValido = computed(() => EMAIL_REGEX.test(form.correo));
+const passwordValida = computed(() => PASSWORD_REGEX.test(form.password));
+const nombresValido = computed(() => NOMBRE_REGEX.test(form.nombres));
+const apellidosValido = computed(() => NOMBRE_REGEX.test(form.apellidos));
+
 const isFormValid = computed(() => {
     return form.cedula.trim() !== '' &&
            form.nombres.trim() !== '' &&
+           nombresValido.value &&
            form.apellidos.trim() !== '' &&
+           apellidosValido.value &&
            form.correo.trim() !== '' &&
+           correoValido.value &&
            form.password.trim() !== '' &&
+           passwordValida.value &&
            form.confirmPassword.trim() !== '' &&
            form.password === form.confirmPassword &&
            form.p12Password.trim() !== '' &&
@@ -260,19 +286,22 @@ const handleRegister = async () => {
         } else {
             uploadStatus.value = 'error';
             let errorMsg = 'Error al registrar la cuenta';
+            const errorText = await response.text();
             try {
-                const errorData = await response.json();
+                const errorData = JSON.parse(errorText);
                 errorMsg = errorData.error || errorData.details || errorMsg;
             } catch (e) {
-                const errorText = await response.text();
-                if(errorText) errorMsg = errorText;
+                if (errorText) errorMsg = errorText;
             }
             throw new Error(errorMsg);
         }
     } catch (error) {
         uploadStatus.value = 'error';
         console.error("Register error:", error);
-        showToast(error.message, 'error');
+        const mensaje = error instanceof TypeError
+            ? 'No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.'
+            : (error.message || 'Ocurrió un error inesperado. Intente nuevamente.');
+        showToast(mensaje, 'error');
     } finally {
         isLoading.value = false;
     }

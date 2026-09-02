@@ -63,7 +63,9 @@ const truncateString = (str, num) => {
 const descargarCertificados = async () => {
   // window.open no puede llevar el header Authorization, así que se pide el
   // ZIP con fetch y se dispara la descarga desde el blob resultante.
-  const backendUrl = `http://localhost:8080/api/v1/certificaciones/${props.context.expedienteId}/descargar`;
+  // Ruta relativa (pasa por el proxy de vue.config.js) — una URL absoluta
+  // aquí vuelve la petición cross-origin real y el navegador la bloquea.
+  const backendUrl = `/api/v1/certificaciones/${props.context.expedienteId}/descargar`;
   try {
     const response = await fetch(backendUrl, { headers: withAuthHeader() });
     if (!response.ok) {
@@ -86,7 +88,10 @@ const descargarCertificados = async () => {
     });
   } catch (error) {
     console.error('Descarga error:', error);
-    showToast(error.message || 'Error al descargar el certificado', 'error');
+    const mensaje = error instanceof TypeError
+      ? 'No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.'
+      : (error.message || 'Error al descargar el certificado');
+    showToast(mensaje, 'error');
   }
 };
 

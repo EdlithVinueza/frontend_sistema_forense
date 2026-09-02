@@ -73,8 +73,11 @@ const validateAndSign = async () => {
     emit('next');
   } catch (err) {
     console.error("❌ ERROR AL FIRMAR:", err);
-    showToast(err.message || 'Contraseña incorrecta o problema de red, intente nuevamente.', 'error');
-    errors.password = err.message || 'Contraseña incorrecta o problema de red, intente nuevamente.';
+    const mensaje = err instanceof TypeError
+      ? 'No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.'
+      : (err.message || 'Contraseña incorrecta o problema de red, intente nuevamente.');
+    showToast(mensaje, 'error');
+    errors.password = mensaje;
   } finally {
     isLoading.value = false;
   }
