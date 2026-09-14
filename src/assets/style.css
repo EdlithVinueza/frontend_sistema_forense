@@ -17,6 +17,16 @@
     --font-mono: 'JetBrains Mono', monospace;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
 body {
     background-color: var(--surface);
     font-family: var(--font-body);
@@ -24,8 +34,18 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    flex: 1;
 }
 
 a, router-link, .router-link-active {
@@ -35,8 +55,6 @@ a, router-link, .router-link-active {
 
 main {
     flex: 1;
-    overflow-y: auto;
-    min-height: 0;
 }
 
 #navbar-container {
@@ -344,4 +362,33 @@ main {
 .upload-card:hover {
     border-color: var(--primary);
     background: white;
+}
+
+/* --- RESPONSIVE MOBILE UX --- */
+@media (max-width: 640px) {
+    .stepper-container {
+        padding: 0 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .step-circle {
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+    .step-label {
+        font-size: 8px;
+        letter-spacing: 0.05em;
+        max-width: 68px;
+        line-height: 1.1;
+    }
+    .step-connector {
+        top: 15px;
+    }
+    .btn-black, .btn-ghost {
+        min-height: 38px;
+    }
+    .card-main {
+        border-radius: 1rem;
+    }
 }

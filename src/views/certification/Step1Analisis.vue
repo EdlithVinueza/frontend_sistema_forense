@@ -77,8 +77,13 @@
     </div>
 
     <!-- Recovery Modal -->
-    <div v-if="showRecoveryModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div class="bg-white p-6 rounded-xl max-w-md w-full shadow-2xl animate-fade-in text-center relative">
+    <div v-if="showRecoveryModal" @click.self="cancelRecovery" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div class="bg-white p-6 rounded-2xl max-w-md w-full shadow-2xl animate-fade-in text-center relative max-h-[90vh] overflow-y-auto">
+        <!-- Close button [X] -->
+        <button type="button" @click="cancelRecovery" class="absolute top-3 right-3 text-gray-400 hover:text-black transition-colors p-1.5 rounded-full hover:bg-gray-100" title="Cerrar modal (Esc)">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+
         <span class="material-symbols-outlined text-4xl mb-2" :class="isSystemLocked ? 'text-red-500' : 'text-primary'">
           {{ isSystemLocked ? 'gpp_bad' : 'policy' }}
         </span>
@@ -96,7 +101,7 @@
           </p>
           
           <div class="flex gap-2 justify-center mt-4">
-            <button @click="cancelRecovery" class="btn-ghost !py-2 !px-4 text-xs uppercase">Cancelar</button>
+            <button @click="cancelRecovery" class="btn-ghost !py-2 !px-4 text-xs uppercase">Volver al inicio</button>
             <button @click="attemptRecovery" :disabled="!recoveryCedula" class="btn-black !py-2 !px-4 text-xs uppercase">Verificar Identidad</button>
           </div>
         </div>
@@ -105,22 +110,27 @@
           <p class="text-xs text-red-600 font-bold mb-4 bg-red-50 p-3 rounded-lg border border-red-200">
             Se han detectado indicios de robo de autoría debido a múltiples intentos fallidos con cédulas incorrectas. El sistema ha bloqueado temporalmente este proceso por razones de seguridad forense.
           </p>
-          <button @click="cancelRecovery" class="btn-ghost !py-2 !px-4 text-xs uppercase w-full">Volver al inicio</button>
+          <button @click="cancelRecovery" class="btn-black !py-2 !px-4 text-xs uppercase w-full">Volver al inicio</button>
         </div>
       </div>
     </div>
 
     <!-- Success Recovery Modal -->
-    <div v-if="showSuccessRecoveryModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div class="bg-white p-6 rounded-xl max-w-md w-full shadow-2xl animate-fade-in text-center relative">
-        <span class="material-symbols-outlined text-5xl text-primary mb-2">verified</span>
+    <div v-if="showSuccessRecoveryModal" @click.self="cancelRecovery" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div class="bg-white p-6 rounded-2xl max-w-md w-full shadow-2xl animate-fade-in text-center relative max-h-[90vh] overflow-y-auto">
+        <!-- Close button [X] -->
+        <button type="button" @click="cancelRecovery" class="absolute top-3 right-3 text-gray-400 hover:text-black transition-colors p-1.5 rounded-full hover:bg-gray-100" title="Cerrar modal (Esc)">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+
+        <span class="material-symbols-outlined text-5xl text-emerald-500 mb-2">verified</span>
         <h3 class="text-lg font-bold mb-2">Identidad Verificada</h3>
         <p class="text-sm text-gray-700 mb-4">Estimado Autor, dado que tú certificaste esta obra y por cuestiones de integridad y autoría, emitimos nuevamente el certificado original en un archivo ZIP.</p>
         
         <button @click="downloadRecoveredZip" class="btn-black !py-3 !px-6 w-full flex justify-center items-center gap-2 mb-2">
           <span class="material-symbols-outlined">download</span> Descargar ZIP Original
         </button>
-        <button @click="$emit('cancel')" class="text-xs text-gray-500 underline mt-2 hover:text-gray-800">Volver al inicio</button>
+        <button @click="cancelRecovery" class="btn-ghost !py-2 !px-4 text-xs uppercase w-full mt-2 hover:bg-gray-100 transition-colors">Volver al inicio</button>
       </div>
     </div>
 
@@ -128,7 +138,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, onMounted, onUnmounted } from 'vue';
 import { showToast } from '../../services/toastService';
 import { CertificationClient } from '../../clients/CertificationClient';
 
@@ -272,16 +282,42 @@ const validateAndNext = async () => {
   }
 };
 
+const handleKeyDown = (e) => {
+  if (e.key === 'Escape' || e.key === 'Esc') {
+    if (showRecoveryModal.value || showSuccessRecoveryModal.value) {
+      cancelRecovery();
+    }
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
+
 const cancelRecovery = () => {
   showRecoveryModal.value = false;
+  showSuccessRecoveryModal.value = false;
   recoveryCedula.value = '';
   recoveryAttempts.value = 0;
   isSystemLocked.value = false;
+  duplicateHash.value = '';
+  recoveredBlob.value = null;
   props.context.archivos.imagen = null;
   props.context.archivos.psd = null;
-  if (imagePreviewUrl.value) URL.revokeObjectURL(imagePreviewUrl.value);
-  imagePreviewUrl.value = null;
-  emit('cancel'); // Vuelve a la boveda / limpia todo
+  props.context.archivosModificados = false;
+  if (imagePreviewUrl.value) {
+    URL.revokeObjectURL(imagePreviewUrl.value);
+    imagePreviewUrl.value = null;
+  }
+  uploadStatus.value = 'idle';
+  error.value = '';
+  isProcessing.value = false;
+  isRecovering.value = false;
+  emit('cancel'); // Vuelve al inicio / limpia todo
 };
 
 const attemptRecovery = async () => {
@@ -326,7 +362,7 @@ const downloadRecoveredZip = () => {
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
   showToast("Descarga completada. El proceso ha finalizado.", "success");
-  setTimeout(() => { emit('cancel'); }, 2000);
+  setTimeout(() => { cancelRecovery(); }, 2000);
 };
 
 </script>

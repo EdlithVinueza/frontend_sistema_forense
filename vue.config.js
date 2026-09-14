@@ -11,10 +11,6 @@ module.exports = defineConfig({
       '/api/v1/auth': {
         target: 'http://localhost:8080',
         changeOrigin: true
-      },
-      '/usuarios': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
       }
     }
   }

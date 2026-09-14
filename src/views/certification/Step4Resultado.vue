@@ -61,11 +61,8 @@ const truncateString = (str, num) => {
 };
 
 const descargarCertificados = async () => {
-  // window.open no puede llevar el header Authorization, así que se pide el
-  // ZIP con fetch y se dispara la descarga desde el blob resultante.
-  // Ruta relativa (pasa por el proxy de vue.config.js) — una URL absoluta
-  // aquí vuelve la petición cross-origin real y el navegador la bloquea.
-  const backendUrl = `/api/v1/certificaciones/${props.context.expedienteId}/descargar`;
+  const API_URL_CERT = process.env.VUE_APP_API_CERT || '/api/v1/certificaciones';
+  const backendUrl = `${API_URL_CERT}/${props.context.expedienteId}/descargar`;
   try {
     const response = await fetch(backendUrl, { headers: withAuthHeader() });
     if (!response.ok) {

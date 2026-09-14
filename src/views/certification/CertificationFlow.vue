@@ -97,11 +97,9 @@ const resetContext = () => {
 
 const cancelFlow = () => {
   resetContext();
-  router.push('/dashboard');
 };
 
 const finishFlow = () => {
   resetContext();
-  router.push('/dashboard');
 };
 </script>

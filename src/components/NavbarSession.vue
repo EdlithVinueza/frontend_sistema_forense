@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-standard flex justify-between items-center !py-2 !px-6">
     <div class="flex items-center gap-10">
-      <router-link to="/certification" class="text-black font-heading font-bold text-xl tracking-tighter uppercase">VerisArt</router-link>
+      <BrandLogo to="/certification" />
       <div class="hidden md:flex gap-6 text-sm font-medium text-gray-500">
         <router-link to="/certification" class="text-black border-b-2 border-black pb-1">Certificación de Obras</router-link>
       </div>
@@ -36,6 +36,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import BrandLogo from './BrandLogo.vue';
 
 const router = useRouter();
 const userEmail = ref(localStorage.getItem('userEmail') || 'usuario@ejemplo.com');

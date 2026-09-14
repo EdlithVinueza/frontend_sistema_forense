@@ -11,9 +11,9 @@
       <div class="bg-surface p-3 rounded-xl border border-outline-variant/30 relative">
         <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Contraseña de Firma</label>
         <div class="relative w-full">
-          <input v-model="context.firma.password" :type="showPassword ? 'text' : 'password'" class="input-standard w-full !py-2 !px-3 !text-sm pr-10" placeholder="Ingrese su contraseña PKI">
-          <button @click="showPassword = !showPassword" type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-black">
-            <span class="material-symbols-outlined text-lg">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+          <input v-model="context.firma.password" :type="showPassword ? 'text' : 'password'" class="input-standard w-full !py-2 !px-3 !text-sm pr-9" placeholder="Ingrese su contraseña PKI">
+          <button @click="showPassword = !showPassword" type="button" tabindex="-1" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-400 hover:text-black transition-colors focus:outline-none">
+            <span class="material-symbols-outlined text-[18px] select-none">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
           </button>
         </div>
         <ValidationError v-if="errors.password" :error="errors.password" />

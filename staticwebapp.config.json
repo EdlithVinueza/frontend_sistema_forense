@@ -1,0 +1,15 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/img/*", "/css/*", "/js/*", "/favicon.ico", "/favicon.svg", "/*.{png,jpg,jpeg,svg,ico}"]
+  },
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  },
+  "mimeTypes": {
+    ".svg": "image/svg+xml",
+    ".json": "application/json"
+  }
+}

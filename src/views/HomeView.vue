@@ -1,18 +1,6 @@
 <template>
-  <div class="flex flex-col bg-[#f7f9fb] h-screen overflow-y-auto overflow-x-hidden">
-    <!-- Navbar -->
-    <nav class="nav-standard flex justify-between items-center bg-white/95 backdrop-blur-md shadow-sm px-8 py-3 sticky top-0 w-full z-50">
-        <div class="flex items-center gap-10">
-            <span class="font-heading font-bold text-2xl tracking-tighter uppercase text-black">VerisArt</span>
-            <div class="hidden md:flex gap-6 text-sm font-medium text-gray-600">
-                <a href="#features" class="hover:text-black transition-colors">Fundamentos</a>
-            </div>
-        </div>
-        <div class="flex items-center gap-6">
-            <router-link to="/login" class="text-sm font-semibold text-gray-800 hover:text-black transition-colors">Iniciar Sesión</router-link>
-            <router-link to="/register" class="btn-black !py-2 !px-4 !text-xs uppercase tracking-widest hover:scale-105 transition-transform">Registrarse</router-link>
-        </div>
-    </nav>
+  <div class="flex flex-col bg-[#f7f9fb] min-h-screen w-full">
+    <NavbarPublic />
 
     <main class="flex-grow">
         <!-- Hero Section con Ilustración de Mujer e Hortensia -->
@@ -58,7 +46,11 @@
                             <span class="material-symbols-outlined text-sm">arrow_forward</span>
                         </router-link>
 
-                        <a href="#features" class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-gray-700 hover:text-black flex items-center justify-center gap-2 group transition-colors">
+                        <a 
+                            href="#como-funciona" 
+                            @click.prevent="scrollToSection('como-funciona')"
+                            class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-gray-700 hover:text-black flex items-center justify-center gap-2 group transition-colors cursor-pointer"
+                        >
                             <span class="material-symbols-outlined text-xl text-gray-500 group-hover:text-black transition-colors">play_circle</span>
                             Conoce cómo funciona
                         </a>
@@ -102,6 +94,75 @@
             </div>
         </section>
 
+        <!-- Sección ¿Cómo Funciona? (Flujo Paso a Paso) -->
+        <section id="como-funciona" class="max-w-7xl mx-auto px-8 py-16 sm:py-20 border-t border-gray-200/60">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-[0.25em] text-[#00b562]">PROCESO DE CERTIFICACIÓN</span>
+                <h2 class="text-3xl font-heading font-bold text-gray-900 mt-2">¿Cómo funciona Veriart?</h2>
+                <p class="text-gray-500 text-xs sm:text-sm mt-2 max-w-lg mx-auto">
+                    Cuatro etapas integradas para proteger la autoría original y emitir un certificado con plena validez digital.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Paso 1 -->
+                <div class="card-main p-6 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col hover:-translate-y-1.5 transition-transform duration-300 relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 rounded-xl bg-[#e6fbf2] text-[#00b562] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-xl">upload_file</span>
+                        </div>
+                        <span class="font-mono text-xs font-bold text-gray-400">PASO 01</span>
+                    </div>
+                    <h3 class="text-base font-heading font-bold text-gray-900 mb-1.5">Análisis Forense</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed">
+                        Carga de la obra para el cálculo del hash perceptual (pHash). Detecta plagios o intentos de doble registro.
+                    </p>
+                </div>
+
+                <!-- Paso 2 -->
+                <div class="card-main p-6 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col hover:-translate-y-1.5 transition-transform duration-300 relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 rounded-xl bg-[#e6fbf2] text-[#00b562] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-xl">edit_note</span>
+                        </div>
+                        <span class="font-mono text-xs font-bold text-gray-400">PASO 02</span>
+                    </div>
+                    <h3 class="text-base font-heading font-bold text-gray-900 mb-1.5">Metadatos de Autoría</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed">
+                        Registro inalterable de título, dimensiones, técnica artística y expediente de autoría vinculante.
+                    </p>
+                </div>
+
+                <!-- Paso 3 -->
+                <div class="card-main p-6 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col hover:-translate-y-1.5 transition-transform duration-300 relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 rounded-xl bg-[#e6fbf2] text-[#00b562] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-xl">draw</span>
+                        </div>
+                        <span class="font-mono text-xs font-bold text-gray-400">PASO 03</span>
+                    </div>
+                    <h3 class="text-base font-heading font-bold text-gray-900 mb-1.5">Firma PKI (.p12)</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed">
+                        Firma criptográfica con el certificado personal del artista, garantizando autenticidad y no-repudio.
+                    </p>
+                </div>
+
+                <!-- Paso 4 -->
+                <div class="card-main p-6 bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col hover:-translate-y-1.5 transition-transform duration-300 relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-10 w-10 rounded-xl bg-[#e6fbf2] text-[#00b562] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-xl">verified</span>
+                        </div>
+                        <span class="font-mono text-xs font-bold text-gray-400">PASO 04</span>
+                    </div>
+                    <h3 class="text-base font-heading font-bold text-gray-900 mb-1.5">Certificado Oficial</h3>
+                    <p class="text-gray-500 text-xs leading-relaxed">
+                        Emisión del certificado forense con resumen SHA-256 y código QR para verificación pública inmediata.
+                    </p>
+                </div>
+            </div>
+        </section>
+
         <!-- Footer -->
         <Footer />
     </main>
@@ -109,5 +170,26 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import NavbarPublic from '../components/NavbarPublic.vue';
 import Footer from '../components/Footer.vue';
+
+const route = useRoute();
+
+const scrollToSection = (id) => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+onMounted(() => {
+  if (route.hash) {
+    const targetId = route.hash.replace('#', '');
+    setTimeout(() => {
+      scrollToSection(targetId);
+    }, 150);
+  }
+});
 </script>
