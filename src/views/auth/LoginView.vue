@@ -6,7 +6,7 @@
         <div class="max-w-4xl w-full flex flex-col md:flex-row card-main m-auto overflow-hidden bg-white shadow-2xl rounded-2xl border border-gray-100">
             <!-- Columna Izquierda con Imagen Conceptual -->
             <div class="w-full md:w-1/2 bg-black relative p-4 sm:p-6 md:p-10 text-white flex flex-col justify-end h-24 sm:h-32 md:h-auto md:min-h-[380px] overflow-hidden">
-                <img src="/login_art_pki.png"
+                <img src="/modulo-a-login.png"
                      alt="Autenticación PKI Forense"
                      class="absolute inset-0 w-full h-full object-cover object-center opacity-90 filter brightness-[1.05]">
                 <!-- Gradient overlay para legibilidad del texto -->

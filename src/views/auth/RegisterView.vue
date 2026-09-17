@@ -7,7 +7,7 @@
             
             <!-- Columna Izquierda con Imagen Conceptual -->
             <div class="w-full md:w-5/12 relative p-5 sm:p-6 md:p-8 text-white flex flex-col justify-end bg-black h-28 sm:h-36 md:h-auto md:min-h-[480px] overflow-hidden">
-                <img src="/register_art_pki.png"
+                <img src="/modulo-a-registro.png"
                      alt="Registro de Identidad Digital PKI"
                      class="absolute inset-0 w-full h-full object-cover object-center opacity-90 filter brightness-[1.05]">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent z-0"></div>

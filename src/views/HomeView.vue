@@ -9,7 +9,7 @@
             <!-- Imagen de Fondo a la Derecha -->
             <div class="absolute right-0 top-0 bottom-0 w-full md:w-3/5 h-full z-0 pointer-events-none">
                 <img 
-                    src="/hero_art_certification.png" 
+                    src="/modulo-b-analisis-verificacion.png"
                     alt="Ilustración Digital de Mujer con Hortensia"
                     class="w-full h-full object-cover object-center filter brightness-[1.02] contrast-[1.05]"
                 />
