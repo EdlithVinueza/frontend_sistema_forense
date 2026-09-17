@@ -1,6 +1,36 @@
 import { withAuthHeader } from '../services/authToken';
 
 const API_URL_CERT = process.env.VUE_APP_API_CERT || '/api/v1/certificaciones';
+const DEFAULT_TIMEOUT_MS = 90000; // 90 segundos para procesos forenses pesados
+
+async function fetchWithTimeout(url, options = {}, timeoutMs = DEFAULT_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (response.status === 401 || response.status === 403) {
+      localStorage.removeItem('authToken');
+      if (typeof window !== 'undefined') {
+        window.location.hash = '#/login?expired=true';
+      }
+      throw new Error('Tu sesión ha expirado o no tienes permisos. Por favor, inicia sesión nuevamente.');
+    }
+
+    return response;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      throw new Error('La operación superó el tiempo límite de espera (90s). Si el archivo PSD es grande, el procesamiento puede demorar un momento adicional.');
+    }
+    throw err;
+  }
+}
 
 export const CertificationClient = {
   async initCertificacion(psdFile, imgFile) {
@@ -9,7 +39,7 @@ export const CertificationClient = {
     formData.append('imagen', imgFile);
 
     try {
-      const response = await fetch(`${API_URL_CERT}/init`, {
+      const response = await fetchWithTimeout(`${API_URL_CERT}/init`, {
         method: 'POST',
         headers: withAuthHeader(),
         body: formData
@@ -32,7 +62,7 @@ export const CertificationClient = {
     formData.append('cedula', cedula);
 
     try {
-      const response = await fetch(`${API_URL_CERT}/recuperar`, {
+      const response = await fetchWithTimeout(`${API_URL_CERT}/recuperar`, {
         method: 'POST',
         headers: withAuthHeader(),
         body: formData
@@ -53,7 +83,7 @@ export const CertificationClient = {
 
   async enviarDatosObra(idExpediente, datosObra) {
     try {
-      const response = await fetch(`${API_URL_CERT}/${idExpediente}/datos`, {
+      const response = await fetchWithTimeout(`${API_URL_CERT}/${idExpediente}/datos`, {
         method: 'PUT',
         headers: withAuthHeader({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(datosObra)
@@ -74,7 +104,7 @@ export const CertificationClient = {
     params.append('password', password);
 
     try {
-      const response = await fetch(`${API_URL_CERT}/${idExpediente}/firmar`, {
+      const response = await fetchWithTimeout(`${API_URL_CERT}/${idExpediente}/firmar`, {
         method: 'POST',
         headers: withAuthHeader({ 'Content-Type': 'application/x-www-form-urlencoded' }),
         body: params
@@ -90,5 +120,3 @@ export const CertificationClient = {
     }
   }
 };
-
-
