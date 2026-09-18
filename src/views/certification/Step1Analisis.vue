@@ -66,14 +66,28 @@
     </div>
 
     <!-- Loading Overlay -->
-    <div v-if="isProcessing" class="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center rounded-xl">
-      <span class="material-symbols-outlined text-4xl text-primary animate-spin mb-2">autorenew</span>
-      <p class="text-xs font-bold text-gray-700 uppercase tracking-widest text-center px-4">
-        {{ isRecovering ? 'Recuperando Certificado...' : 'Analizando Archivos...' }}<br/>
-        <span class="text-[9px] text-gray-500 font-normal normal-case">
-          {{ isRecovering ? 'Ensamblando PDF e inyectando metadatos' : 'Evaluando integridad y extrayendo metadatos' }}
-        </span>
+    <div v-if="isProcessing" class="absolute inset-0 bg-white/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center rounded-xl p-6 text-center">
+      <span class="material-symbols-outlined text-4xl text-primary animate-spin mb-3">autorenew</span>
+      <p class="text-xs font-bold text-gray-800 uppercase tracking-widest mb-1">
+        {{ isRecovering ? 'Recuperando Certificado...' : (uploadProgress.phase === 'processing' ? 'Analizando Archivos en Servidor...' : 'Subiendo Archivos Forenses...') }}
       </p>
+
+      <!-- Barra de progreso dinámica -->
+      <div v-if="!isRecovering && uploadProgress.totalMb && uploadProgress.phase === 'uploading'" class="w-full max-w-xs mt-3 bg-gray-200 rounded-full h-2.5 overflow-hidden shadow-inner">
+        <div class="bg-primary h-2.5 rounded-full transition-all duration-300" :style="{ width: uploadProgress.percent + '%' }"></div>
+      </div>
+
+      <p v-if="!isRecovering && uploadProgress.totalMb && uploadProgress.phase === 'uploading'" class="text-[11px] text-gray-600 mt-2 font-mono">
+        {{ uploadProgress.percent }}% ({{ uploadProgress.loadedMb }} MB de {{ uploadProgress.totalMb }} MB) • {{ uploadProgress.speedMbps }} Mbps
+      </p>
+
+      <div v-else-if="!isRecovering && uploadProgress.phase === 'processing'" class="mt-2 text-[10px] text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 animate-pulse">
+        ¡Transferencia completada al 100%! Extrayendo capas PSD, metadatos y calculando hashes periciales...
+      </div>
+
+      <span v-else class="text-[10px] text-gray-500 font-normal mt-1">
+        {{ isRecovering ? 'Ensamblando PDF e inyectando metadatos' : 'Evaluando integridad y extrayendo metadatos' }}
+      </span>
     </div>
 
     <!-- Recovery Modal -->
@@ -156,6 +170,7 @@ const recoveryAttempts = ref(0);
 const isSystemLocked = ref(false);
 const duplicateHash = ref('');
 const recoveredBlob = ref(null);
+const uploadProgress = ref({ percent: 0, loadedMb: '0.0', totalMb: '0.0', speedMbps: '0.0', phase: 'idle' });
 
 const imagePreviewUrl = ref(null);
 
@@ -248,9 +263,16 @@ const validateAndNext = async () => {
     isProcessing.value = true;
     successMsg.value = '';
     uploadStatus.value = 'idle';
+    uploadProgress.value = { percent: 0, loadedMb: '0.0', totalMb: '0.0', speedMbps: '0.0', phase: 'uploading' };
     
-    console.log("Iniciando envío sincrónico de archivos PSD e Imagen al backend...");
-    const res = await CertificationClient.initCertificacion(props.context.archivos.psd, props.context.archivos.imagen);
+    console.log("Iniciando envío con monitoreo de progreso de archivos PSD e Imagen al backend...");
+    const res = await CertificationClient.initCertificacion(
+      props.context.archivos.psd,
+      props.context.archivos.imagen,
+      (prog) => {
+        uploadProgress.value = prog;
+      }
+    );
     
     if (res.estado === 'REQUIERE_CEDULA') {
       isProcessing.value = false;
