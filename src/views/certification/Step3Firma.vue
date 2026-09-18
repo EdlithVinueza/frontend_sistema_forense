@@ -11,8 +11,8 @@
       <div class="bg-surface p-3 rounded-xl border border-outline-variant/30 relative">
         <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Contraseña de Firma</label>
         <div class="relative w-full">
-          <input v-model="context.firma.password" :type="showPassword ? 'text' : 'password'" class="input-standard w-full !py-2 !px-3 !text-sm pr-9" placeholder="Ingrese su contraseña PKI">
-          <button @click="showPassword = !showPassword" type="button" tabindex="-1" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-400 hover:text-black transition-colors focus:outline-none">
+          <input v-model="context.firma.password" :disabled="isLoading" @keyup.enter="validateAndSign" :type="showPassword ? 'text' : 'password'" class="input-standard w-full !py-2 !px-3 !text-sm pr-9 disabled:bg-gray-100 disabled:text-gray-400" placeholder="Ingrese su contraseña PKI">
+          <button @click="showPassword = !showPassword" type="button" tabindex="-1" :disabled="isLoading" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-400 hover:text-black transition-colors focus:outline-none disabled:opacity-50">
             <span class="material-symbols-outlined text-[18px] select-none">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
           </button>
         </div>
@@ -32,9 +32,22 @@
           <span :class="{'opacity-0': isLoading}">Firmar y Sellar</span>
         </button>
       </div>
-      <div v-if="isLoading" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
-        <span class="material-symbols-outlined text-4xl text-primary animate-spin mb-2">autorenew</span>
-        <p class="text-xs font-bold text-gray-700 uppercase tracking-widest text-center px-4">Generando Certificado y ZIP...<br/><span class="text-[9px] text-gray-500 font-normal normal-case">Esto puede tardar unos segundos</span></p>
+
+      <!-- Loading Overlay Profesional -->
+      <div v-if="isLoading" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+        <div class="bg-white p-6 rounded-2xl max-w-sm w-full shadow-2xl text-center flex flex-col items-center border border-gray-100">
+          <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+            <span class="material-symbols-outlined text-4xl text-primary animate-spin">autorenew</span>
+          </div>
+          <h3 class="text-sm font-heading font-bold text-gray-900 uppercase tracking-wider mb-1">Firmando y Sellando Obra</h3>
+          <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+            Aplicando firma digital PKI y generando certificado forense inmutable con sello de tiempo...
+          </p>
+          <div class="inline-flex items-center gap-1.5 text-[10px] text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <span>Esto puede tomar unos segundos...</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -28,14 +28,27 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <button @click="descargarCertificados" class="btn-black !py-2.5 w-full uppercase tracking-[0.2em] text-[10px] mb-4">
-        <span class="material-symbols-outlined text-sm align-middle">download</span> Descargar Obra Firmada y Certificado ZIP
+      <button 
+        @click="descargarCertificados" 
+        :disabled="isDownloading"
+        class="btn-black !py-2.5 w-full uppercase tracking-[0.2em] text-[10px] mb-2 flex items-center justify-center gap-2 disabled:opacity-60"
+      >
+        <span class="material-symbols-outlined text-sm" :class="{ 'animate-spin': isDownloading }">
+          {{ isDownloading ? 'autorenew' : 'download' }}
+        </span>
+        <span>{{ isDownloading ? 'Descargando y Preparando ZIP...' : 'Descargar Obra Firmada y Certificado ZIP' }}</span>
       </button>
-      <div class="flex gap-2">
-        <button @click="certificarOtra" class="btn-ghost !py-2.5 w-full uppercase tracking-[0.2em] text-[10px] border border-gray-200">
+
+      <div v-if="isDownloading" class="text-[11px] text-gray-600 bg-gray-50 p-2 rounded-lg border border-gray-200 mb-2 animate-pulse flex items-center justify-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+        <span>Transfiriendo expediente forense... Por favor espere.</span>
+      </div>
+
+      <div class="flex gap-2 mt-1">
+        <button @click="certificarOtra" :disabled="isDownloading" class="btn-ghost !py-2.5 w-full uppercase tracking-[0.2em] text-[10px] border border-gray-200 disabled:opacity-50">
           Certificar otra obra
         </button>
-        <button @click="cerrarSesion" class="btn-ghost !py-2.5 w-full uppercase tracking-[0.2em] text-[10px] text-red-600 border border-red-100 hover:bg-red-50">
+        <button @click="cerrarSesion" :disabled="isDownloading" class="btn-ghost !py-2.5 w-full uppercase tracking-[0.2em] text-[10px] text-red-600 border border-red-100 hover:bg-red-50 disabled:opacity-50">
           Cerrar sesión
         </button>
       </div>
@@ -44,7 +57,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 import confetti from 'canvas-confetti';
 import { withAuthHeader } from '../../services/authToken';
@@ -53,6 +66,7 @@ import { showToast } from '../../services/toastService';
 const props = defineProps({ context: Object });
 const emit = defineEmits(['complete']);
 const router = useRouter();
+const isDownloading = ref(false);
 
 const truncateString = (str, num) => {
   if (!str) return '';
@@ -61,6 +75,8 @@ const truncateString = (str, num) => {
 };
 
 const descargarCertificados = async () => {
+  if (isDownloading.value) return;
+  isDownloading.value = true;
   const API_URL_CERT = process.env.VUE_APP_API_CERT || '/api/v1/certificaciones';
   const backendUrl = `${API_URL_CERT}/${props.context.expedienteId}/descargar`;
   try {
@@ -83,12 +99,15 @@ const descargarCertificados = async () => {
       spread: 70,
       origin: { y: 0.6 }
     });
+    showToast('Descarga iniciada exitosamente.', 'success');
   } catch (error) {
     console.error('Descarga error:', error);
     const mensaje = error instanceof TypeError
       ? 'No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.'
       : (error.message || 'Error al descargar el certificado');
     showToast(mensaje, 'error');
+  } finally {
+    isDownloading.value = false;
   }
 };
 

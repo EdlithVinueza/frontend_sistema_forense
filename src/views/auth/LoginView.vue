@@ -59,6 +59,21 @@
         </div>
     </main>
 
+    <!-- PANTALLA DE CARGA DURANTE LOGIN -->
+    <div v-if="isLoading" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in">
+        <div class="bg-white p-6 rounded-2xl max-w-xs w-full shadow-2xl text-center flex flex-col items-center border border-gray-100">
+            <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                <span class="material-symbols-outlined text-4xl text-primary animate-spin">autorenew</span>
+            </div>
+            <h3 class="text-sm font-heading font-bold text-gray-900 uppercase tracking-wider mb-1">Iniciando Sesión</h3>
+            <p class="text-xs text-gray-600 mb-3">Verificando credenciales forenses...</p>
+            <div class="inline-flex items-center gap-1.5 text-[10px] text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Accediendo al sistema...</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer Reutilizable Compacto -->
     <Footer />
   </div>
