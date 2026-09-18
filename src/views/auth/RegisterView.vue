@@ -158,13 +158,9 @@
                 <span class="material-symbols-outlined text-4xl text-primary animate-spin">autorenew</span>
             </div>
             <h3 class="text-base font-heading font-bold text-gray-900 uppercase tracking-wider mb-1.5">Creando Cuenta Forense</h3>
-            <p class="text-xs text-gray-600 mb-4 leading-relaxed">
+            <p class="text-xs text-gray-600 leading-relaxed">
                 Validando certificado digital PKI (.p12), protegiendo claves y registrando credenciales en el sistema...
             </p>
-            <div class="inline-flex items-center gap-2 text-[11px] text-gray-600 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                <span>Por favor, espere un momento...</span>
-            </div>
         </div>
     </div>
 

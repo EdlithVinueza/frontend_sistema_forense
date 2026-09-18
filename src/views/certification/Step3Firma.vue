@@ -40,13 +40,9 @@
             <span class="material-symbols-outlined text-4xl text-primary animate-spin">autorenew</span>
           </div>
           <h3 class="text-sm font-heading font-bold text-gray-900 uppercase tracking-wider mb-1">Firmando y Sellando Obra</h3>
-          <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+          <p class="text-xs text-gray-600 leading-relaxed">
             Aplicando firma digital PKI y generando certificado forense inmutable con sello de tiempo...
           </p>
-          <div class="inline-flex items-center gap-1.5 text-[10px] text-gray-500 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>Esto puede tomar unos segundos...</span>
-          </div>
         </div>
       </div>
     </div>

@@ -39,11 +39,6 @@
         <span>{{ isDownloading ? 'Descargando y Preparando ZIP...' : 'Descargar Obra Firmada y Certificado ZIP' }}</span>
       </button>
 
-      <div v-if="isDownloading" class="text-[11px] text-gray-600 bg-gray-50 p-2 rounded-lg border border-gray-200 mb-2 animate-pulse flex items-center justify-center gap-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-        <span>Transfiriendo expediente forense... Por favor espere.</span>
-      </div>
-
       <div class="flex gap-2 mt-1">
         <button @click="certificarOtra" :disabled="isDownloading" class="btn-ghost !py-2.5 w-full uppercase tracking-[0.2em] text-[10px] border border-gray-200 disabled:opacity-50">
           Certificar otra obra

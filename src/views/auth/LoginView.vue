@@ -66,11 +66,7 @@
                 <span class="material-symbols-outlined text-4xl text-primary animate-spin">autorenew</span>
             </div>
             <h3 class="text-sm font-heading font-bold text-gray-900 uppercase tracking-wider mb-1">Iniciando Sesión</h3>
-            <p class="text-xs text-gray-600 mb-3">Verificando credenciales forenses...</p>
-            <div class="inline-flex items-center gap-1.5 text-[10px] text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Accediendo al sistema...</span>
-            </div>
+            <p class="text-xs text-gray-600">Verificando credenciales forenses...</p>
         </div>
     </div>
 

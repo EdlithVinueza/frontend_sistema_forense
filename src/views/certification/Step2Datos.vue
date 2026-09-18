@@ -97,13 +97,9 @@
         <span class="material-symbols-outlined text-3xl text-primary animate-spin">autorenew</span>
       </div>
       <h3 class="text-sm font-heading font-bold text-gray-900 uppercase tracking-wider mb-1">Guardando Metadatos Forenses</h3>
-      <p class="text-xs text-gray-600 mb-3 max-w-xs leading-relaxed">
+      <p class="text-xs text-gray-600 max-w-xs leading-relaxed">
         Registrando y vinculando la información técnica de la obra con el expediente pericial...
       </p>
-      <div class="inline-flex items-center gap-1.5 text-[10px] text-gray-500 bg-gray-50 px-3 py-1 rounded-full border border-gray-200">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-        <span>Por favor, espere un momento...</span>
-      </div>
     </div>
   </div>
 </template>

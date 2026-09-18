@@ -104,13 +104,9 @@
             <span class="material-symbols-outlined text-4xl text-primary animate-spin">autorenew</span>
           </div>
           <h4 class="text-base font-heading font-bold text-gray-900 mb-1">Verificando Identidad Forense</h4>
-          <p class="text-xs text-gray-600 mb-3 max-w-xs leading-relaxed">
+          <p class="text-xs text-gray-600 max-w-xs leading-relaxed">
             Consultando registros periciales previos y preparando el expediente de recuperación...
           </p>
-          <div class="inline-flex items-center gap-2 text-[11px] text-gray-600 bg-gray-50 px-3.5 py-1.5 rounded-full border border-gray-200 shadow-sm">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>Por favor, espere un momento...</span>
-          </div>
         </div>
 
         <span class="material-symbols-outlined text-4xl mb-2" :class="isSystemLocked ? 'text-red-500' : 'text-primary'">
